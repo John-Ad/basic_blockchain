@@ -2,7 +2,7 @@
 #define SHA256_H
 
 #include "include.h"
-#include "bitset"
+#include <sstream>
 
 typedef unsigned int uint32;
 
@@ -29,8 +29,30 @@ const uint32 round_constants[64]={
 };
 
 class SHA256{
-    public:
     private:
+        //instance variables
+        int inputMsgSize;
+        int numOfChunks;
+        uint32* inputMsg;
+        uint32* wBlock;
+        uint32* hVals;
+        stringstream digest;
+
+        // worker methods
+        unsigned long pow32();      // return 2^32
+        int countbits(unsigned long long number);   // count the number of bits in the binary representation of a number eg 10 = 4 bits
+        uint32 rightRotate(uint32 elem, int len);   // rotate bits in elem by a certain len
+        unsigned char* convertToChar(uint32 elem);         // convert 32 bit elem to array of 8 bit elems
+
+        // algorithm functions
+        void createInputMsg(unsigned char* in, int inN);
+        void createWBlock();
+        void transform();
+        void compress();
+        void finalConcat();
+    public:
+        SHA256(){inputMsgSize=0;numOfChunks=0;hVals=new uint32[8];}
+        string getHash(unsigned char* msgIn, int n);
 };
 
 #endif
