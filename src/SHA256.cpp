@@ -167,19 +167,18 @@ void SHA256::compress(){
 }
 
 void SHA256::finalConcat(){
-    unsigned char* conversionHolder;
 
     for(int i=0;i<8;i++){
-        conversionHolder= convertToChar(hVals[i]);
+        unsigned char* conversionHolder = convertToChar(hVals[i]);
         digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[0];
         digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[1];
         digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[2];
         digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[3];
-    }
-    //cout<<endl<<endl<<digest.str()<<endl;
 
-    // conversionHolder no longer needed, delete from heap
-    delete conversionHolder;
+        // conversionHolder no longer needed, delete from heap
+        delete[] conversionHolder;
+    }
+    //cout<<endl<<endl<<digest.str()<<endl;     // debugging
 }
 
 string SHA256::getHash(unsigned char* msgIn, int n){
