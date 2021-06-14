@@ -36,7 +36,7 @@ class SHA256{
         uint32* inputMsg;
         uint32* wBlock;
         uint32* hVals;
-        stringstream digest;
+        stringstream digest;        // stringstream has no copy constructor. This might cause issues later on. Add cpy constructor to SHA256 or replace stringstream
 
         // worker methods
         unsigned long pow32();      // return 2^32
@@ -51,7 +51,8 @@ class SHA256{
         void compress();
         void finalConcat();
     public:
-        SHA256(){inputMsgSize=0;numOfChunks=0;hVals=new uint32[8];}
+        SHA256(){inputMsgSize=0;numOfChunks=0;hVals=new uint32[8];} //hvals deallocd in destructor
+        ~SHA256();
         string getHash(unsigned char* msgIn, int n);
 };
 

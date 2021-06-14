@@ -6,5 +6,9 @@
 #include <string>
 #include <algorithm>
 #include <bitset>
+#include <vector>
+#include <cstdint>
+#include <cstdlib>
+#include <time.h>
 
 using namespace std;

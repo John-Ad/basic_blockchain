@@ -1,5 +1,12 @@
 #include "SHA256.h"
 
+// destructor
+SHA256::~SHA256(){      // delete heap objects 
+    delete[] inputMsg;
+    delete[] wBlock;
+    delete[] hVals;
+}
+
 unsigned long SHA256::pow32(){
     return pow(2,32);
 }
@@ -10,7 +17,7 @@ uint32 SHA256::rightRotate(uint32 elem, int len){   // 32 bit based
     return (elem >> len) | (elem << (32-len));
 }
 unsigned char* SHA256::convertToChar(unsigned int elem){
-    unsigned char* result=new unsigned char[4];
+    unsigned char* result=new unsigned char[4];     // deallocated in finalConcat
     result[0]= elem >> 24;          // get leftmost bits by shifting to right
     result[1]= (elem<<8) >> 24;     // shift to left once and get leftmost bits by shifting to right
     result[2]= (elem<<16) >> 24;    // shift left twice ...
@@ -31,7 +38,7 @@ void SHA256::createInputMsg(unsigned char* in, int n){
     inputMsgSize=size/8;
     numOfChunks=size/512;
 
-    // create array of size size/8
+    // create array of size size/8      // deallocated in destructor
     inputMsg=new uint32[size/8];     // 8 bits in a byte eg 512 bits / 8 = 64 bytes
 
     // copy message, add '1' and pad with 0s
@@ -63,7 +70,7 @@ void SHA256::createInputMsg(unsigned char* in, int n){
 
 
 void SHA256::createWBlock(){
-    wBlock=new uint32[64];
+    wBlock=new uint32[64];      // deallocated in destructor
 
     // init hash values
     hVals[0]=hash_values[0];
@@ -160,22 +167,28 @@ void SHA256::compress(){
 }
 
 void SHA256::finalConcat(){
-    unsigned char* convertionHolder=new unsigned char[4];
+    unsigned char* conversionHolder;
 
     for(int i=0;i<8;i++){
-        convertionHolder= convertToChar(hVals[i]);
-        digest<<hex<<setfill('0')<<setw(2)<<(int)convertionHolder[0];
-        digest<<hex<<setfill('0')<<setw(2)<<(int)convertionHolder[1];
-        digest<<hex<<setfill('0')<<setw(2)<<(int)convertionHolder[2];
-        digest<<hex<<setfill('0')<<setw(2)<<(int)convertionHolder[3];
+        conversionHolder= convertToChar(hVals[i]);
+        digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[0];
+        digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[1];
+        digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[2];
+        digest<<hex<<setfill('0')<<setw(2)<<(int)conversionHolder[3];
     }
     //cout<<endl<<endl<<digest.str()<<endl;
+
+    // conversionHolder no longer needed, delete from heap
+    delete conversionHolder;
 }
 
 string SHA256::getHash(unsigned char* msgIn, int n){
     createInputMsg(msgIn,n);
 
-    cout<<endl<<inputMsgSize*8<<endl<<endl;
+    // msgIn has been used, delete from heap
+    //delete msgIn;     // no need, somewhere else calls delete, I dont know where  // results in: free(): double free detected in tcache 2 error
+
+    //cout<<endl<<inputMsgSize*8<<endl<<endl;   // debugging
 
     createWBlock();     // convert input to wblocks for transformation and compression
 
