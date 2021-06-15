@@ -1,4 +1,5 @@
 #include "Blockchain.h"
+#include <exception>
 
 BlockChain::BlockChain(int difficulty){
     srand(time(0));                     // set seed for random generator
@@ -7,10 +8,14 @@ BlockChain::BlockChain(int difficulty){
 }
 
 Block& BlockChain::getLastBlock(){
-    return chain[chain.size()-1];  // return reference to last block
+    if(chain.size()>0)
+        return chain[chain.size()-1];
+    throw "\ngetLastBlock() error: chain is empty"; 
 }
-Block& BlockChain::getBlock(int index){
-    return chain[index];
+Block& BlockChain::getBlock(int index){     // throws index out of bounds exception
+    if(index>=0 && index<chain.size())
+        return chain[index];
+    throw "\ngetBlock(index) error: index out of bounds"; 
 }
 
 void BlockChain::addBlock(string userName,string comment){

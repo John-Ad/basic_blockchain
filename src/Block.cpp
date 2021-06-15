@@ -12,9 +12,6 @@ Block::Block(const Block& old){
     this->blockHash=old.blockHash;
 }
 
-string Block::getHash(){
-    return blockHash;
-}
 void Block::mineBlock(const uint32 difficulty){
     // create array of zeros
     //      remove this and just use a string and append zeros
@@ -49,5 +46,19 @@ string Block::calculateHash(){
 
     //return hash
     return sha256.getHash((unsigned char*)ss.str().c_str(),ss.str().length());
+}
+
+// getters/setters
+string Block::getHash(){
+    return blockHash;
+}
+Data Block::getData(){
+    return this->data;
+}
+uint32 Block::getIndex(){
+    return this->index;
+}
+int64_t Block::getNonce(){
+    return this->nonce;
 }
 

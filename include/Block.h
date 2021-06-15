@@ -44,8 +44,13 @@ class Block{
         // copy constructor
         Block(const Block& old);
 
-        string getHash();
         void mineBlock(const uint32 difficulty);
 
         string prevHash;   // previous block
+
+        // getters/setters
+        string getHash();
+        Data getData();
+        uint32 getIndex();
+        int64_t getNonce();
 };

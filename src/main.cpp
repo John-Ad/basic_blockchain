@@ -9,10 +9,16 @@ int main(){
     */
 
     cout<<endl<<"mining genesis block: ..."<<endl;
-    BlockChain chain(1);
+    BlockChain chain(6);
 
     cout<<endl<<"mining next block: "<<endl;
     chain.addBlock("JohnAd","its kinda working");
+
+    try{
+        cout<<chain.getLastBlock().getData().userName<<endl;
+    }catch(const char* err){
+        cout<<err<<endl;
+    }
 }
 
 
