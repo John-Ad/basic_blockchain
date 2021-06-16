@@ -1,7 +1,7 @@
 #include "Block.h"
 
 // basic constructor
-Block::Block(uint32 index, Data data, string prevHash): index{index}, data{data}, prevHash{prevHash}, nonce{0}  // nonce starts at 0
+Block::Block(uint32 index, Data data, string prevHash): blockHash{""}, index{index}, data{data}, prevHash{prevHash}, nonce{0}  // nonce starts at 0
 {}
 
 // copy constructor
@@ -12,24 +12,38 @@ Block::Block(const Block& old){
     this->blockHash=old.blockHash;
 }
 
-void Block::mineBlock(const uint32 difficulty){
-    // create array of zeros
-    //      remove this and just use a string and append zeros
-    char zeroPadding[difficulty+1];     // this will be compared to the zeros in the beginning of the calculated hash. If it matches the mining will be complete
-    for(int i=0;i<difficulty;i++){
-        zeroPadding[i]='0';
-    }
-    zeroPadding[difficulty]='\0';   // add termination character
+void Block::mine(const uint32 difficulty){
+    string hashHolder;      // local holder for hash to be used by thread
 
-    string str(zeroPadding);        // convert to string
+    // create array of zeros
+    string str="";
+    for(int i=0;i<difficulty;i++){
+        str+="0";
+    }
 
     do{
-        blockHash=calculateHash();
-        //nonce++;      // start from 0 and increase nonce by 1
-        nonce=rand();   // set nonce to a random value
-    }while(blockHash.substr(0,difficulty)!=str);    // if hash does not start with right number of zeros
+        if(blockHash != "")       // if hash is found by another thread stop current threads execution
+            return;
 
+        hashHolder=calculateHash();
+        nonce=rand();   // set nonce to a random value
+    }while(hashHolder.substr(0,difficulty)!=str);    // if hash does not start with right number of zeros
+
+    blockHash=hashHolder;       // set blocks final hash
     cout<<"Block mined: "<<blockHash<<endl;
+}
+
+void Block::mineBlock(const uint32 difficulty, int numOfThreads){
+    vector<thread> threads;     // used to store all the created threads
+
+    for(int i=0;i<numOfThreads;i++){    // create num of threads as defined by user
+        // pass pointer-to-member, object, params
+        threads.push_back(thread(&Block::mine,this,difficulty)); // push thread to arr of threads
+    }
+
+    for(int i=0;i<threads.size();i++){  // join all threads
+        threads[i].join();
+    }
 }
 
 string Block::calculateHash(){

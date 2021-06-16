@@ -9,7 +9,7 @@ int main(){
     */
 
     cout<<endl<<"mining genesis block: ..."<<endl;
-    BlockChain chain(6);
+    BlockChain chain(4,100);
 
     cout<<endl<<"mining next block: "<<endl;
     chain.addBlock("JohnAd","its kinda working");
@@ -19,6 +19,8 @@ int main(){
     }catch(const char* err){
         cout<<err<<endl;
     }
+
+    return 0;
 }
 
 
