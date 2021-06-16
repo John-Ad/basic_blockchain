@@ -37,7 +37,7 @@ class Block{
         Data data;
         string blockHash;   // hash of this block
 
-        void mine(const uint32 difficulty);
+        void mine(const uint32 difficulty, uint32 seed);
         string calculateHash();
     public:
         // basic constructor

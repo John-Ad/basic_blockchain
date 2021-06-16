@@ -12,7 +12,7 @@ Block::Block(const Block& old){
     this->blockHash=old.blockHash;
 }
 
-void Block::mine(const uint32 difficulty){
+void Block::mine(const uint32 difficulty, uint32 seed){
     string hashHolder;      // local holder for hash to be used by thread
 
     // create array of zeros
@@ -26,7 +26,7 @@ void Block::mine(const uint32 difficulty){
             return;
 
         hashHolder=calculateHash();
-        nonce=rand();   // set nonce to a random value
+        nonce=rand_r(&seed);   // set nonce to a random value   // rand_r might not be best
     }while(hashHolder.substr(0,difficulty)!=str);    // if hash does not start with right number of zeros
 
     blockHash=hashHolder;       // set blocks final hash
@@ -38,7 +38,7 @@ void Block::mineBlock(const uint32 difficulty, int numOfThreads){
 
     for(int i=0;i<numOfThreads;i++){    // create num of threads as defined by user
         // pass pointer-to-member, object, params
-        threads.push_back(thread(&Block::mine,this,difficulty)); // push thread to arr of threads
+        threads.push_back(thread(&Block::mine,this,difficulty,time(0)+(i*i))); // push thread to arr of threads
     }
 
     for(int i=0;i<threads.size();i++){  // join all threads
