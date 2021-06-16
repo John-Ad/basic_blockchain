@@ -37,6 +37,7 @@ class Block{
         Data data;
         string blockHash;   // hash of this block
 
+        void mine(const uint32 difficulty);
         string calculateHash();
     public:
         // basic constructor
@@ -44,7 +45,7 @@ class Block{
         // copy constructor
         Block(const Block& old);
 
-        void mineBlock(const uint32 difficulty);
+        void mineBlock(const uint32 difficulty, int numOfThreads);
 
         string prevHash;   // previous block
 

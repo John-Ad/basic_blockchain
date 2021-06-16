@@ -1,9 +1,9 @@
 #include "Blockchain.h"
-#include <exception>
 
-BlockChain::BlockChain(int difficulty){
+BlockChain::BlockChain(uint32 difficulty, int numOfThreads){
     srand(time(0));                     // set seed for random generator
     this->difficulty=difficulty;           // default difficulty is 1
+    this->numOfThreads=numOfThreads;
     addBlock("GENESIS BLOCK","GENESIS BLOCK");  // add genesis block as first block in chain
 }
 
@@ -26,7 +26,7 @@ void BlockChain::addBlock(string userName,string comment){
     Data data(userName, comment);   // construct data object
 
     Block block(chain.size(),data,prevHash); // create block
-    block.mineBlock(difficulty);    // mine block
+    block.mineBlock(difficulty,numOfThreads);    // mine block
 
     chain.push_back(block);  // once mining os done add to chain
 }

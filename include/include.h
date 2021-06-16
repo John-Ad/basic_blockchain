@@ -10,5 +10,7 @@
 #include <cstdint>
 #include <cstdlib>
 #include <time.h>
+#include <thread>
+#include <exception>
 
 using namespace std;
