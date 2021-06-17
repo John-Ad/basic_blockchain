@@ -1,7 +1,6 @@
 #include "Blockchain.h"
 
 BlockChain::BlockChain(uint32 difficulty, int numOfThreads){
-    srand(time(0));                     // set seed for random generator
     this->difficulty=difficulty;           // default difficulty is 1
     this->numOfThreads=numOfThreads;
     addBlock("GENESIS BLOCK","GENESIS BLOCK");  // add genesis block as first block in chain

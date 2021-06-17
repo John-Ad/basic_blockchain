@@ -9,7 +9,7 @@ int main(){
     */
 
     cout<<endl<<"mining genesis block: ..."<<endl;
-    BlockChain chain(4,100);
+    BlockChain chain(6,100);
 
     cout<<endl<<"mining next block: "<<endl;
     chain.addBlock("JohnAd","its kinda working");
